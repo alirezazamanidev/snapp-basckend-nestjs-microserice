@@ -1,3 +1,4 @@
+import { Observable } from "rxjs";
 
 
 export const USER_PACKAGE_NAME = 'user';
@@ -14,8 +15,19 @@ export class ISendOtpRequest {
 }
 export class ISendOtpResponse {
     message: string;
-    
+    otp: string;
+}
+export class ICheckOtpRequest {
+    otp: string;
+    phone: string;
+    ip: string;
+    userAgent: string;
+}
+export class ICheckOtpResponse {
+    message: string;
+    sessionId: string;
 }
 export interface IAuthService {
     sendOtp(request: ISendOtpRequest): Promise<ISendOtpResponse>;
+    checkOtp(request: ICheckOtpRequest): Observable<ICheckOtpResponse>;
 }

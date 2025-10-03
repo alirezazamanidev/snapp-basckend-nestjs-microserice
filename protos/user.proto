@@ -7,11 +7,21 @@ message SendOtpRequest {
 }
 message sendOtpResponse {
     string message = 1;
+    string otp = 2;
 }
-message SendOtpResponse {
+
+message CheckOtpRequest {
     string otp = 1;
+    string phone = 2;
+    string ip = 3;
+    string userAgent = 4;
+}
+message CheckOtpResponse {
+    string message = 1;
+    string sessionId = 2;
 }
 
 service AuthService {
     rpc sendOtp(SendOtpRequest) returns (sendOtpResponse);
+    rpc checkOtp(CheckOtpRequest) returns (CheckOtpResponse);
 }
