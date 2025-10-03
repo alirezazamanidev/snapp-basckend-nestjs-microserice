@@ -1,20 +1,25 @@
-import { IUserService, USER_SERVICE_NAME } from '@app/common';
-import { Controller, Get, Inject, OnModuleInit, UseInterceptors } from '@nestjs/common';
+import { AUTH_SERVICE_NAME, IAuthService } from '@app/common';
+import { Body, Controller, Get, Inject, OnModuleInit, Post, UseInterceptors } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
 import { ClientEnum } from '../../common/enums/client.enum';
 import { GrpcErrorInterceptor } from '../../common/interceptors/grpc-error.interceptor';
+import { ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { SendOtpDto } from './dtos/auth.dto';
+import { ContentType } from '../../common/enums/swagger.enum';
 
 @Controller('auth')
 @UseInterceptors(GrpcErrorInterceptor)
 export class AuthController implements OnModuleInit {
-  private userService:IUserService
+  private authService:IAuthService
   constructor(@Inject(ClientEnum.USER_SERVICE) private readonly client:ClientGrpc) {}
   onModuleInit() {
-    this.userService=this.client.getService<IUserService>(USER_SERVICE_NAME);
+    this.authService=this.client.getService<IAuthService>(AUTH_SERVICE_NAME);
   }
 
-  @Get('test')
-  async test() {
-    return this.userService.Test({msg:'Hello'});
+  @ApiOperation({summary: 'Send OTP'})
+  @Post('send-otp')
+  @ApiConsumes(ContentType.Form,ContentType.Json)
+  async sendOtp(@Body() dto: SendOtpDto) {
+    return this.authService.sendOtp(dto);
   }
 }

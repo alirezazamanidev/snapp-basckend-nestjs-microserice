@@ -9,11 +9,12 @@ export class TypeOrmDbConfig implements TypeOrmOptionsFactory {
     return {
       type: 'mysql',
       host: process.env.MYSQL_HOST,
-      port:process.env.MYSQL_PORT,
+      port:3306,
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      entities: [join(__dirname, '../modules/**/*.entity.{ts,js}')],
+      entities: [join(__dirname, '..', 'database', 'entities', '*.entity.{ts,js}')],
+      autoLoadEntities: true,
       synchronize: true,
       logging:
         process.env.NODE_ENV === 'development' ? ['error', 'warn'] : false,
